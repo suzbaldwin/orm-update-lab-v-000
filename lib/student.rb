@@ -51,6 +51,26 @@ def save
 
   end
 end
+def update
+    sql = "UPDATE students SET name = ?, grade = ? WHERE id = ?"
+    DB[:conn].execute(sql, self.name, self.grade, self.id)
+  end
 
+def self.create(name, grade)
+
+      student = Student.new(name, grade)
+      student.save
+      student
+
+end
+
+def self.new_from_db(name:, grade:, id:)
+
+    new_student = self.new(name:, grade:, id:)  # self.new is the same as running Song.new
+    new_student.id = row[0]
+    new_student.name =  row[1]
+    new_student.grade = row[2]
+    new_student  # ret
+end
 
 end
