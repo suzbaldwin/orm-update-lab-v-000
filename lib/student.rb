@@ -77,7 +77,7 @@ class Student
     sql = "SELECT name FROM students WHERE name = ?"
     row = DB[:conn].execute(sql, name)
 
-    student = Student.new_from_db(row[0], row[1], row[2])
+    student = Student.new_from_db(row[1])
 
   end
 
