@@ -78,8 +78,8 @@ class Student
     row = DB[:conn].execute(sql, name).first
 
     student = Student.new(row[0], row[1], row[2])
-    
-    
+
+
   end
 
 
