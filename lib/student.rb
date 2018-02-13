@@ -33,44 +33,56 @@ class Student
     SQL
     DB[:conn].execute(sql)
 
-end
-def save
+  end
+  def save
 
-  if self.id
-    self.update
-  else
-    sql = <<-SQL
+    if self.id
+      self.update
+    else
+      sql = <<-SQL
 
       INSERT INTO students (name, grade)
       VALUES (?, ?)
 
-    SQL
+      SQL
 
-    DB[:conn].execute(sql, self.name, self.grade)
-    @id = DB[:conn].execute("SELECT last_insert_rowid() FROM  students")[0][0]
+      DB[:conn].execute(sql, self.name, self.grade)
+      @id = DB[:conn].execute("SELECT last_insert_rowid() FROM  students")[0][0]
 
+    end
   end
-end
-def update
+  def update
     sql = "UPDATE students SET name = ?, grade = ? WHERE id = ?"
     DB[:conn].execute(sql, self.name, self.grade, self.id)
   end
 
-def self.create(name, grade)
+  def self.create(name, grade)
 
-      student = Student.new(name, grade)
-      student.save
-      student
+    student = Student.new(name, grade)
+    student.save
+    student
 
-end
+  end
 
-def self.new_from_db(name:, grade:, id:)
+  def self.new_from_db(row)
+    id = row[0]
+    name =  row[1]
+    grade = row[2]
 
-    new_student = self.new(name:, grade:, id:)  # self.new is the same as running Song.new
-    new_student.id = row[0]
-    new_student.name =  row[1]
-    new_student.grade = row[2]
-    new_student  # ret
-end
+    new_student = self.new(name, grade, id)
+    new_student
+  end
+
+  def self.find_by_name(name)
+    sql = "SELECT name FROM students WHERE name = ?"
+    row = DB[:conn].execute(sql, name)
+    
+    student = Student.new(row[0], row[1], row[2])
+
+  end
+
+
+
+
 
 end
